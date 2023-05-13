@@ -9,6 +9,7 @@
 
 #include "requests.h"
 #include "helpers.h"
+#include "utils.h"
 
 char *compute_get_request(char *host, char *url, char *query_params,
 						  char **cookies, int cookies_count) {

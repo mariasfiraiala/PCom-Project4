@@ -9,6 +9,7 @@
 
 #include "helpers.h"
 #include "buffer.h"
+#include "utils.h"
 
 void compute_message(char *message, const char *line) {
     strcat(message, line);

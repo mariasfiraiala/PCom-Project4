@@ -1,20 +1,6 @@
 #ifndef _HELPERS_
 #define _HELPERS_
 
-#include <errno.h>
-
-#define BUFLEN 4096
-#define LINELEN 1000
-
-#define DIE(assertion, call_description)                                       \
-    do {                                                                       \
-        if (assertion) {                                                       \
-            fprintf(stderr, "(%s, %d): ", __FILE__, __LINE__);                 \
-            perror(call_description);                                          \
-            exit(errno);                                                       \
-        }                                                                      \
-    } while (0)
-
 #define HEADER_TERMINATOR "\r\n\r\n"
 #define HEADER_TERMINATOR_SIZE (sizeof(HEADER_TERMINATOR) - 1)
 #define CONTENT_LENGTH "Content-Length: "
