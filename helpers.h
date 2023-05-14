@@ -10,7 +10,7 @@
 void compute_message(char *message, const char *line);
 
 // opens a connection with server host_ip on port portno, returns a socket
-int open_connection(char *host_ip, int portno, int ip_type, int socket_type, int flag);
+int open_connection(const char *host_ip, int portno, int ip_type, int socket_type, int flag);
 
 // closes a server connection on socket sockfd
 void close_connection(int sockfd);

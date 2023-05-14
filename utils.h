@@ -14,6 +14,9 @@
 #define BOOK        "/api/v1/tema/library/books/:"
 
 #define PAYLOAD "application/json"
+#define SERVER "34.254.242.81:8080"
+#define IP "34.254.242.81"
+#define PORT 8080
 
 #define DIE(assertion, call_description)                                       \
     do {                                                                       \

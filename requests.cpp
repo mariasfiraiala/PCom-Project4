@@ -11,7 +11,7 @@
 #include "helpers.h"
 #include "utils.h"
 
-char *compute_get_request(char *host, char *url, char *query_params,
+char *compute_get_request(const char *host, const char *url, char *query_params,
 						  char **cookies, int cookies_count) {
 	char *message = (char *)calloc(BUFLEN, sizeof(char));
 	DIE(!message, "calloc() failed");
@@ -52,8 +52,8 @@ char *compute_get_request(char *host, char *url, char *query_params,
 	return message;
 }
 
-char *compute_post_request(char *host, char *url, char *content_type,
-						   char **body_data, int body_data_fields_count,
+char *compute_post_request(const char *host, const char *url, const char *content_type,
+						   const char *body_data, int body_data_fields_count,
 						   char **cookies, int cookies_count) {
 	char *message = (char *)calloc(BUFLEN, sizeof(char));
 	DIE(!message, "calloc() failed");
@@ -78,12 +78,7 @@ char *compute_post_request(char *host, char *url, char *content_type,
 	 * message size
 	 */
 	memset(body_data_buffer, 0, LINELEN);
-	for (int i = 0; i < body_data_fields_count; ++i) {
-		strcat(body_data_buffer, body_data[i]);
-		if (i != body_data_fields_count - 1) {
-			strcat(body_data_buffer, "&");
-		}
-	}
+	strcat(body_data_buffer, body_data);
 
 	sprintf(line, "Content-Type: %s", content_type);
 	compute_message(message, line);

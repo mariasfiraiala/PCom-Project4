@@ -11,11 +11,9 @@
 #include "helpers.h"
 #include "commands.h"
 
-#define SERVER "34.254.242.81"
-
 int main(void) {
     int sockfd;
-    // sockfd = open_connection(SERVER, 8080, AF_INET, SOCK_STREAM, 0);
+    sockfd = open_connection(IP, PORT, AF_INET, SOCK_STREAM, 0);
 
     char buff[LINELEN];
 
@@ -30,7 +28,7 @@ int main(void) {
             printf("Invalid command.\n");
 
         if (!strcmp(argv[0], "register")) {
-            auth();
+            auth(sockfd);
         } else if (!strcmp(argv[0], "login")) {
 
         } else if (!strcmp(argv[0], "enter_library")) {
