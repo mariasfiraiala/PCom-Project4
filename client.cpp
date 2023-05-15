@@ -15,13 +15,14 @@
 
 int main(void) {
     int sockfd;
-    sockfd = open_connection(IP, PORT, AF_INET, SOCK_STREAM, 0);
 
-    char *login_cookie;
-
+    char *login_cookie = NULL;
+    char *jwt_token = NULL;
     char buff[LINELEN];
 
     while (1) {
+        sockfd = open_connection(IP, PORT, AF_INET, SOCK_STREAM, 0);
+
         memset(buff, 0, LINELEN);
         fgets(buff, LINELEN, stdin);
 
@@ -36,9 +37,9 @@ int main(void) {
         } else if (!strcmp(argv[0], "login")) {
             login_cookie = login(sockfd);
         } else if (!strcmp(argv[0], "enter_library")) {
-
+            jwt_token = enter_library(sockfd, login_cookie);
         } else if (!strcmp(argv[0], "get_books")) {
-
+            get_books(sockfd, jwt_token);
         } else if (!strcmp(argv[0], "get_book")) {
 
         } else if (!strcmp(argv[0], "add_book")) {
@@ -52,6 +53,8 @@ int main(void) {
         } else {
             printf("Invalid command.\n");
         }
+
+        close(sockfd);
     }
     return 0;
 }

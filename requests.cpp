@@ -33,7 +33,7 @@ char *compute_get_request(const char *host, const char *url, char *query_params,
 	compute_message(message, line);
 
 	/* Add headers and/or cookies, according to the protocol format */
-	if (cookies) {
+	if (cookies_count) {
 		memset(line, 0, LINELEN);
 		strcat(line, "Cookie: ");
 		for (int i = 0; i < cookies_count - 1; i++) {

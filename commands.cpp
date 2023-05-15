@@ -153,11 +153,45 @@ char *login(int sockfd) {
         std::cout << r_auth.value("error", "") << "\n";
         cookie = NULL;
     } else {
-        cookie = strtok(strstr(response, "connect.sid"), "\n");
+        cookie = strtok(strstr(response, "connect.sid"), ";");
     }
 
     delete auth_string;
     free(response);
 
     return cookie;
+}
+
+char *enter_library(int sockfd, char *cookie) {
+    char *request = compute_get_request(SERVER, LIBRARY, NULL, &cookie, (cookie != NULL));
+    // TODO: Remove this
+    printf("%s\n", request);
+
+    send_to_server(sockfd, request);
+    free(request);
+
+    char *response = receive_from_server(sockfd);
+    // TODO: Remove this
+    printf("Response is %s\n", response);
+
+    json r_enter = json::parse(strstr(response, "{"));
+    char *token = NULL;
+
+    if (r_enter.contains("error")) {
+        std::cout << r_enter.value("error", "") << "\n";
+    } else {
+        std::string tmp;
+        r_enter.at("token").get_to(tmp);
+
+        token = new char[tmp.length() + 1];
+        strcpy(token, tmp.c_str());
+    }
+
+    free(response);
+
+    return token;
+}
+
+void get_books(int sockfd, char *token) {
+    
 }
