@@ -3,4 +3,6 @@
 
 void auth(int sockfd);
 
+char *login(int sockfd);
+
 #endif

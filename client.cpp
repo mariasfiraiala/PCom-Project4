@@ -1,3 +1,5 @@
+#include <bits/stdc++.h>
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -15,6 +17,8 @@ int main(void) {
     int sockfd;
     sockfd = open_connection(IP, PORT, AF_INET, SOCK_STREAM, 0);
 
+    char *login_cookie;
+
     char buff[LINELEN];
 
     while (1) {
@@ -30,7 +34,7 @@ int main(void) {
         if (!strcmp(argv[0], "register")) {
             auth(sockfd);
         } else if (!strcmp(argv[0], "login")) {
-
+            login_cookie = login(sockfd);
         } else if (!strcmp(argv[0], "enter_library")) {
 
         } else if (!strcmp(argv[0], "get_books")) {
