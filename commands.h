@@ -9,4 +9,8 @@ char *enter_library(int sockfd, char *cookie);
 
 void get_books(int sockfd, char *token);
 
+void get_book(int sockfd, char *token);
+
+void add_book(int sockfd, char *token);
+
 #endif

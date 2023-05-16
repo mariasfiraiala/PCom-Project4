@@ -12,7 +12,8 @@
 #include "utils.h"
 
 char *compute_get_request(const char *host, const char *url, char *query_params,
-						  char **cookies, int cookies_count) {
+						  char **cookies, int cookies_count,
+						  char *token) {
 	char *message = (char *)calloc(BUFLEN, sizeof(char));
 	DIE(!message, "calloc() failed");
 
@@ -45,6 +46,11 @@ char *compute_get_request(const char *host, const char *url, char *query_params,
 		compute_message(message, line);
 	}
 
+	if (token) {
+		sprintf(line, "Authorization: Bearer %s", token);
+		compute_message(message, line);
+	}
+
 	/* Add final new line */
 	compute_message(message, "");
 	free(line);
@@ -54,7 +60,8 @@ char *compute_get_request(const char *host, const char *url, char *query_params,
 
 char *compute_post_request(const char *host, const char *url, const char *content_type,
 						   const char *body_data, int body_data_fields_count,
-						   char **cookies, int cookies_count) {
+						   char **cookies, int cookies_count,
+						   char *token) {
 	char *message = (char *)calloc(BUFLEN, sizeof(char));
 	DIE(!message, "calloc() failed");
 
@@ -96,6 +103,11 @@ char *compute_post_request(const char *host, const char *url, const char *conten
 		}
 
 		strcat(line, cookies[cookies_count - 1]);
+		compute_message(message, line);
+	}
+
+	if (token) {
+		sprintf(line, "Authorization: Bearer %s", token);
 		compute_message(message, line);
 	}
 

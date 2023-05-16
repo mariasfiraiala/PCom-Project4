@@ -11,7 +11,7 @@
 #define LOGOUT      "/api/v1/tema/auth/logout"
 #define LIBRARY     "/api/v1/tema/library/access"
 #define BOOKS       "/api/v1/tema/library/books"
-#define BOOK        "/api/v1/tema/library/books/:"
+#define BOOK        "/api/v1/tema/library/books/"
 
 #define PAYLOAD "application/json"
 #define SERVER "34.254.242.81:8080"
