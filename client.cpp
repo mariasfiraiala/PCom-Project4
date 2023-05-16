@@ -44,8 +44,8 @@ int main(void) {
             get_book(sockfd, jwt_token);
         } else if (!strcmp(argv[0], "add_book")) {
             add_book(sockfd, jwt_token);
-        } else if (!!strcmp(argv[0], "delete_book")) {
-
+        } else if (!strcmp(argv[0], "delete_book")) {
+            delete_book(sockfd, jwt_token);
         } else if (!strcmp(argv[0], "logout")) {
 
         } else if (!strcmp(argv[0], "exit")) {

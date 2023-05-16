@@ -13,4 +13,6 @@ void get_book(int sockfd, char *token);
 
 void add_book(int sockfd, char *token);
 
+void delete_book(int sockfd, char *token);
+
 #endif

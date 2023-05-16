@@ -257,7 +257,8 @@ void get_book(int sockfd, char *token) {
 
 void add_book(int sockfd, char *token) {
     char buff[LINELEN];
-    char title[LINELEN] = { 0 }, author[LINELEN] = { 0 }, genre[LINELEN] = { 0 }, publisher[LINELEN] = { 0 }, page_count[LINELEN] = { 0 };
+    char title[LINELEN] = { 0 }, author[LINELEN] = { 0 }, genre[LINELEN] = { 0 };
+    char publisher[LINELEN] = { 0 }, page_count[LINELEN] = { 0 };
 
     printf("title=");
     fgets(buff, LINELEN, stdin);
@@ -300,6 +301,41 @@ void add_book(int sockfd, char *token) {
     char *response = receive_from_server(sockfd);
     // TODO: Remove this
     printf("Response is %s\n", response);
+
+    if (strstr(response, "{")) {
+        json r_auth = json::parse(strstr(response, "{"));
+        std::cout << r_auth.value("error", "") << "\n";
+    }
+
+    free(response);
+}
+
+void delete_book(int sockfd, char *token) {
+    char id[LINELEN] = { 0 }, buff[LINELEN];
+
+    printf("id=");
+    fgets(buff, LINELEN, stdin);
+    memcpy(id, buff, strlen(buff) - 1);
+
+    char *path = new char[strlen(BOOK) + strlen(id) + 1];
+    strcpy(path, BOOK);
+    strcat(path, id);
+
+    char *request = compute_delete_request(SERVER, path, NULL, NULL, 0, token);
+    // TODO: Remove this
+    printf("%s\n", request);
+
+    send_to_server(sockfd, request);
+    free(request);
+
+    char *response = receive_from_server(sockfd);
+    // TODO: Remove this
+    printf("Response is %s\n", response);
+
+    if (strstr(response, "{")) {
+        json r_auth = json::parse(strstr(response, "{"));
+        std::cout << r_auth.value("error", "") << "\n";
+    }
 
     free(response);
 }
