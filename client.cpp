@@ -29,10 +29,9 @@ int main(void) {
         char argc, *argv[LINELEN];
         argc = parse_by_whitespace(buff, argv);
 
-        if (argc > 1)
+        if (argc > 1) {
             printf("Invalid command.\n");
-
-        if (!strcmp(argv[0], "register")) {
+        } else if (!strcmp(argv[0], "register")) {
             auth(sockfd);
         } else if (!strcmp(argv[0], "login")) {
             login_cookie = login(sockfd);
@@ -47,7 +46,7 @@ int main(void) {
         } else if (!strcmp(argv[0], "delete_book")) {
             delete_book(sockfd, jwt_token);
         } else if (!strcmp(argv[0], "logout")) {
-
+            logout(sockfd, login_cookie);
         } else if (!strcmp(argv[0], "exit")) {
             break;
         } else {

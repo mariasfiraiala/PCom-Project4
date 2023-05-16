@@ -15,4 +15,6 @@ void add_book(int sockfd, char *token);
 
 void delete_book(int sockfd, char *token);
 
+void logout(int sockfd, char *cookie);
+
 #endif

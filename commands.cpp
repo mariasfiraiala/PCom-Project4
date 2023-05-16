@@ -339,3 +339,24 @@ void delete_book(int sockfd, char *token) {
 
     free(response);
 }
+
+void logout(int sockfd, char *cookie) {
+    char *request = compute_get_request(SERVER, LOGOUT, NULL, &cookie,  (cookie != NULL), NULL);
+    // TODO: Remove this
+    printf("%s\n", request);
+
+    send_to_server(sockfd, request);
+    free(request);
+
+    char *response = receive_from_server(sockfd);
+    // TODO: Remove this
+    printf("Response is %s\n", response);
+
+    if (strstr(response, "{")) {
+        json r_auth = json::parse(strstr(response, "{"));
+        std::cout << r_auth.value("error", "") << "\n";
+    }
+
+    cookie = NULL;
+    free(response);
+}
