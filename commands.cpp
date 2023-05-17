@@ -340,8 +340,8 @@ void delete_book(int sockfd, char *token) {
     free(response);
 }
 
-void logout(int sockfd, char *cookie) {
-    char *request = compute_get_request(SERVER, LOGOUT, NULL, &cookie,  (cookie != NULL), NULL);
+void logout(int sockfd, char **cookie, char **token) {
+    char *request = compute_get_request(SERVER, LOGOUT, NULL, cookie,  (*cookie != NULL), NULL);
     // TODO: Remove this
     printf("%s\n", request);
 
@@ -357,6 +357,7 @@ void logout(int sockfd, char *cookie) {
         std::cout << r_auth.value("error", "") << "\n";
     }
 
-    cookie = NULL;
+    *cookie = NULL;
+    *token = NULL;
     free(response);
 }

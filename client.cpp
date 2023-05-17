@@ -46,7 +46,8 @@ int main(void) {
         } else if (!strcmp(argv[0], "delete_book")) {
             delete_book(sockfd, jwt_token);
         } else if (!strcmp(argv[0], "logout")) {
-            logout(sockfd, login_cookie);
+            logout(sockfd, &login_cookie, &jwt_token);
+            printf("TOKEN: %s\n", jwt_token);
         } else if (!strcmp(argv[0], "exit")) {
             break;
         } else {
