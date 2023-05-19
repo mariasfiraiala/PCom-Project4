@@ -11,9 +11,8 @@
 #include "helpers.h"
 #include "utils.h"
 
-char *compute_get_request(const char *host, const char *url, char *query_params,
-						  char **cookies, int cookies_count,
-						  char *token) {
+char *compute_get_request(const char *host, const char *url,
+						  char *cookies, char *token) {
 	char *message = (char *)calloc(BUFLEN, sizeof(char));
 	DIE(!message, "calloc() failed");
 
@@ -21,11 +20,7 @@ char *compute_get_request(const char *host, const char *url, char *query_params,
 	DIE(!line, "calloc() failed");
 
 	/* Write the method name, URL, request params (if any) and protocol type */
-	if (query_params != NULL) {
-		sprintf(line, "GET %s?%s HTTP/1.1", url, query_params);
-	} else {
-		sprintf(line, "GET %s HTTP/1.1", url);
-	}
+	sprintf(line, "GET %s HTTP/1.1", url);
 
 	compute_message(message, line);
 
@@ -34,15 +29,10 @@ char *compute_get_request(const char *host, const char *url, char *query_params,
 	compute_message(message, line);
 
 	/* Add headers and/or cookies, according to the protocol format */
-	if (cookies_count) {
+	if (cookies) {
 		memset(line, 0, LINELEN);
-		strcat(line, "Cookie: ");
-		for (int i = 0; i < cookies_count - 1; i++) {
-			strcat(line, cookies[i]);
-			strcat(line, "; ");
-		}
+		sprintf(line, "Cookie: %s", cookies);
 
-		strcat(line, cookies[cookies_count - 1]);
 		compute_message(message, line);
 	}
 

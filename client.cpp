@@ -34,7 +34,7 @@ int main(void) {
         } else if (!strcmp(argv[0], "register")) {
             auth(sockfd);
         } else if (!strcmp(argv[0], "login")) {
-            login_cookie = login(sockfd);
+            login(sockfd, &login_cookie);
         } else if (!strcmp(argv[0], "enter_library")) {
             jwt_token = enter_library(sockfd, login_cookie);
         } else if (!strcmp(argv[0], "get_books")) {
@@ -47,7 +47,6 @@ int main(void) {
             delete_book(sockfd, jwt_token);
         } else if (!strcmp(argv[0], "logout")) {
             logout(sockfd, &login_cookie, &jwt_token);
-            printf("TOKEN: %s\n", jwt_token);
         } else if (!strcmp(argv[0], "exit")) {
             break;
         } else {
@@ -58,5 +57,8 @@ int main(void) {
     }
 
     close(sockfd);
+    free(login_cookie);
+    free(jwt_token);
+
     return 0;
 }

@@ -3,7 +3,7 @@
 
 void auth(int sockfd);
 
-char *login(int sockfd);
+void login(int sockfd, char **cookie);
 
 char *enter_library(int sockfd, char *cookie);
 
