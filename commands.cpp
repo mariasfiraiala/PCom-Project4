@@ -236,6 +236,14 @@ void get_book(int sockfd, char *token) {
     free(response);
 }
 
+bool is_int(char *buff) {
+    for (; *buff; ++buff)
+        if (!isdigit(*buff))
+            return false;
+ 
+    return true;
+}
+
 void add_book(int sockfd, char *token) {
     char buff[LINELEN];
     char title[LINELEN] = { 0 }, author[LINELEN] = { 0 }, genre[LINELEN] = { 0 };
@@ -257,9 +265,18 @@ void add_book(int sockfd, char *token) {
     fgets(buff, LINELEN, stdin);
     memcpy(publisher, buff, strlen(buff) - 1);
 
-    printf("page_count=");
-    fgets(buff, LINELEN, stdin);
-    memcpy(page_count, buff, strlen(buff) - 1);
+    while (1) {
+        printf("page_count=");
+        fgets(buff, LINELEN, stdin);
+        strtok(buff, "\n");
+
+        if (!is_int(buff)) {
+            printf("Page count should be an int.\n");
+        } else {
+            memcpy(page_count, buff, strlen(buff));
+            break;
+        }
+    }
 
     json add = {
         {"title", title},
