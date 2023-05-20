@@ -48,9 +48,10 @@ char *compute_get_request(const char *host, const char *url,
 	return message;
 }
 
-char *compute_post_request(const char *host, const char *url, const char *content_type,
-						   const char *body_data, int body_data_fields_count,
-						   char **cookies, int cookies_count,
+char *compute_post_request(const char *host, const char *url,
+						   const char *content_type,
+						   const char *body_data,
+						   char *cookies,
 						   char *token) {
 	char *message = (char *)calloc(BUFLEN, sizeof(char));
 	DIE(!message, "calloc() failed");
@@ -86,13 +87,8 @@ char *compute_post_request(const char *host, const char *url, const char *conten
 	/* Add cookies */
 	if (cookies) {
 		memset(line, 0, LINELEN);
-		strcat(line, "Cookie: ");
-		for (int i = 0; i < cookies_count - 1; i++) {
-			strcat(line, cookies[i]);
-			strcat(line, ";");
-		}
+		sprintf(line, "Cookie: %s", cookies);
 
-		strcat(line, cookies[cookies_count - 1]);
 		compute_message(message, line);
 	}
 
@@ -114,21 +110,16 @@ char *compute_post_request(const char *host, const char *url, const char *conten
 	return message;
 }
 
-char *compute_delete_request(const char *host, const char *url, char *query_params,
-						  char **cookies, int cookies_count,
-						  char *token) {
+char *compute_delete_request(const char *host, const char *url,
+						  	 char *cookies,
+						  	 char *token) {
 	char *message = (char *)calloc(BUFLEN, sizeof(char));
 	DIE(!message, "calloc() failed");
 
 	char *line = (char *)calloc(LINELEN, sizeof(char));
 	DIE(!line, "calloc() failed");
 
-	/* Write the method name, URL, request params (if any) and protocol type */
-	if (query_params != NULL) {
-		sprintf(line, "DELETE %s?%s HTTP/1.1", url, query_params);
-	} else {
-		sprintf(line, "DELETE %s HTTP/1.1", url);
-	}
+	sprintf(line, "DELETE %s HTTP/1.1", url);
 
 	compute_message(message, line);
 
@@ -137,15 +128,10 @@ char *compute_delete_request(const char *host, const char *url, char *query_para
 	compute_message(message, line);
 
 	/* Add headers and/or cookies, according to the protocol format */
-	if (cookies_count) {
+	if (cookies) {
 		memset(line, 0, LINELEN);
-		strcat(line, "Cookie: ");
-		for (int i = 0; i < cookies_count - 1; i++) {
-			strcat(line, cookies[i]);
-			strcat(line, "; ");
-		}
+		sprintf(line, "Cookie: %s", cookies);
 
-		strcat(line, cookies[cookies_count - 1]);
 		compute_message(message, line);
 	}
 

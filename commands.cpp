@@ -55,15 +55,14 @@ void auth(int sockfd) {
      * Construct json object and transform it into an array of chars
      * in order to be inserted into the POST HTTP request
      */
-    json auth = {
-        {"username", username},
-        {"password", password}
-    };
-
+    json auth = {{"username", username}, {"password", password}};
+ 
     char *auth_string = (char *)malloc(auth.dump().length() + 1);
+    DIE(!auth_string, "malloc() failed");
     strcpy(auth_string, auth.dump().c_str());
 
-    char *request = compute_post_request(SERVER, REGISTER, PAYLOAD, auth_string, 1, NULL, 0, NULL);
+    char *request = compute_post_request(SERVER, REGISTER, PAYLOAD,
+                                         auth_string, NULL, NULL);
     send_to_server(sockfd, request);
     free(request);
 
@@ -123,15 +122,14 @@ void login(int sockfd, char **cookie) {
      * Construct json object and transform it into an array of chars
      * in order to be inserted into the POST HTTP request
      */
-    json auth = {
-        {"username", username},
-        {"password", password}
-    };
+    json auth = {{"username", username}, {"password", password}};
 
     char *auth_string = (char *)malloc(auth.dump().length() + 1);
+    DIE(!auth_string, "malloc() failed");
     strcpy(auth_string, auth.dump().c_str());
 
-    char *request = compute_post_request(SERVER, LOGIN, PAYLOAD, auth_string, 1, NULL, 0, NULL);
+    char *request = compute_post_request(SERVER, LOGIN, PAYLOAD,
+                                         auth_string, NULL, NULL);
     send_to_server(sockfd, request);
     free(request);
 
@@ -145,6 +143,7 @@ void login(int sockfd, char **cookie) {
         char *tmp = strtok(strstr(response, "connect.sid"), ";");
         free(*cookie);
         *cookie = (char *)malloc(strlen(tmp) + 1);
+        DIE(!(*cookie), "malloc() failed");
         memcpy(*cookie, tmp, strlen(tmp) + 1);
 
         printf("Successfully logged in user %s.\n", username);
@@ -154,7 +153,7 @@ void login(int sockfd, char **cookie) {
     free(response);
 }
 
-char *enter_library(int sockfd, char *cookie) {
+char *enter_library(int sockfd, char* cookie) {
     char *request = compute_get_request(SERVER, LIBRARY, cookie, NULL);
     send_to_server(sockfd, request);
     free(request);
@@ -167,7 +166,7 @@ char *enter_library(int sockfd, char *cookie) {
      * non-error returns
      */
     json r_enter = json::parse(strstr(response, "{"));
-    char *token = NULL;
+    char *token  = NULL;
 
     if (r_enter.contains("error")) {
         std::cout << r_enter.value("error", "") << "\n";
@@ -176,6 +175,7 @@ char *enter_library(int sockfd, char *cookie) {
         r_enter.at("token").get_to(tmp);
 
         token = (char *)malloc(tmp.length() + 1);
+        DIE(!token, "malloc() failed");
         strcpy(token, tmp.c_str());
 
         printf("Successfully entered the library.\n");
@@ -211,6 +211,7 @@ void get_book(int sockfd, char *token) {
     memcpy(id, buff, strlen(buff) - 1);
 
     char *path = (char *)malloc(strlen(BOOK) + strlen(id) + 1);
+    DIE(!path, "malloc() failed");
     strcpy(path, BOOK);
     strcat(path, id);
 
@@ -240,7 +241,7 @@ bool is_int(char *buff) {
     for (; *buff; ++buff)
         if (!isdigit(*buff))
             return false;
- 
+
     return true;
 }
 
@@ -278,18 +279,15 @@ void add_book(int sockfd, char *token) {
         }
     }
 
-    json add = {
-        {"title", title},
-        {"author", author},
-        {"genre", genre},
-        {"page_count", atoi(page_count)},
-        {"publisher", publisher}
-    };
+    json add = {{"title", title}, {"author", author}, {"genre", genre},
+        {"page_count", atoi(page_count)}, {"publisher", publisher}};
 
     char *add_string = (char *)malloc(add.dump().length() + 1);
+    DIE(!add_string, "malloc() failed");
     strcpy(add_string, add.dump().c_str());
 
-    char *request = compute_post_request(SERVER, BOOKS, PAYLOAD, add_string, 1, NULL, 0, token);
+    char *request = compute_post_request(SERVER, BOOKS, PAYLOAD,
+                                         add_string, NULL, token);
     send_to_server(sockfd, request);
     free(request);
 
@@ -314,10 +312,11 @@ void delete_book(int sockfd, char *token) {
     memcpy(id, buff, strlen(buff) - 1);
 
     char *path = (char *)malloc(strlen(BOOK) + strlen(id) + 1);
+    DIE(!path, "malloc() failed");
     strcpy(path, BOOK);
     strcat(path, id);
 
-    char *request = compute_delete_request(SERVER, path, NULL, NULL, 0, token);
+    char *request = compute_delete_request(SERVER, path, NULL, token);
     send_to_server(sockfd, request);
     free(path);
     free(request);
@@ -351,6 +350,6 @@ void logout(int sockfd, char **cookie, char **token) {
     free(*cookie);
     free(*token);
     *cookie = NULL;
-    *token = NULL;
+    *token  = NULL;
     free(response);
 }
